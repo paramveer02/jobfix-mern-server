@@ -4,6 +4,8 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
+    "dev": "NODE_ENV=development nodemon server.js",
+    "project-setup": "npm i",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -11,10 +13,17 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "bcrypt": "^6.0.0",
     "dotenv": "^17.2.1",
     "express": "^5.1.0",
+    "express-rate-limiter": "^1.3.1",
+    "hpp": "^0.2.3",
     "mongoose": "^8.17.1",
     "morgan": "^1.10.1",
-    "node": "^22.18.0"
+    "node": "^22.18.0",
+    "xss": "^1.0.15"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
   }
 }
