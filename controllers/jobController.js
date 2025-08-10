@@ -3,7 +3,6 @@ import { Job } from "../models/Job.js";
 export const getAllJobs = async (req, res) => {
   try {
     const jobs = await Job.find();
-    console.log(jobss);
 
     res.status(200).json({
       status: "success",
