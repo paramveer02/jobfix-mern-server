@@ -1,97 +1,89 @@
+// controllers/jobController.js
+import { StatusCodes } from "http-status-codes";
+import {
+  BadRequestError,
+  NotFoundError,
+  UnauthorizedError,
+} from "../errors/customErrors.js";
 import { Job } from "../models/Job.js";
+import { ALLOWED_JOB_UPDATES } from "../utils/constants.js";
 
 export const getAllJobs = async (req, res) => {
-  try {
-    const jobs = await Job.find();
+  // show only the current user's jobs (admins see all)
+  console.log(req.user);
+  const filter = req.user?.role === "admin" ? {} : { createdBy: req.user.id };
+  const jobs = await Job.find(filter).sort({ createdAt: -1 });
 
-    res.status(200).json({
-      status: "success",
-      results: jobs.length,
-      data: {
-        jobs,
-      },
-    });
-  } catch (err) {
-    res.status(400).json({
-      status: "fail",
-      message: err.message,
-    });
-  }
+  res.status(StatusCodes.OK).json({
+    status: "success",
+    results: jobs.length,
+    data: { jobs },
+  });
 };
 
 export const getJob = async (req, res) => {
-  try {
-    const job = await Job.findById(req.params.id);
+  const { id } = req.params;
 
-    res.status(200).json({
-      status: "success",
-      data: {
-        job,
-      },
-    });
-  } catch (err) {
-    res.status(400).json({
-      status: "fail",
-      message: err.message,
-    });
-  }
+  const query = { _id: id };
+  if (req.user?.role !== "admin") query.createdBy = req.user.id;
+
+  const job = await Job.findOne(query).populate({
+    path: "createdBy",
+    select: "name",
+  });
+  if (!job) throw new NotFoundError(`Job with id ${id} not found`);
+
+  res.status(StatusCodes.OK).json({ status: "success", data: { job } });
 };
 
 export const createJob = async (req, res) => {
-  try {
-    const job = await Job.create(req.body);
-    res.status(200).json({
-      status: "success",
-      job,
-    });
-  } catch (err) {
-    console.log(err);
-    res.status(500).json({ status: "fail", message: err.message });
+  const { company, position } = req.body;
+  if (!company || !position) {
+    throw new BadRequestError("Company and position are required");
   }
+
+  const payload = {
+    ...req.body,
+    createdBy: req.user.id,
+    jobLocation: req.body.jobLocation ?? req.user.location ?? "my city",
+  };
+
+  const job = await Job.create(payload);
+
+  res.status(StatusCodes.CREATED).json({ status: "success", data: { job } });
 };
 
 export const updateJob = async (req, res) => {
-  try {
-    const id = req.params.id;
+  const { id } = req.params;
 
-    const job = await Job.findByIdAndUpdate(id, req.body, {
-      new: true,
-      runValidators: true,
-    }); // new:true will return a new object
+  const job = await Job.findById(id);
 
-    res.status(200).json({
-      status: "success",
-      data: {
-        job,
-      },
-    });
-  } catch (err) {
-    res.status(404).json({
-      status: "fail",
-      message: err,
-    });
+  if (!job) throw new NotFoundError(`Job with id ${id} not found`);
+
+  // ownership (skip for admins)
+  if (req.user?.role !== "admin" && job.createdBy.toString() !== req.user.id) {
+    throw new UnauthorizedError("You are not allowed to modify this job");
   }
+
+  // apply only allowed fields
+  for (const key of ALLOWED_JOB_UPDATES) {
+    if (key in req.body) job[key] = req.body[key];
+  }
+
+  await job.save(); // runs validators
+  res.status(StatusCodes.OK).json({ status: "success", data: { job } });
 };
 
 export const deleteJob = async (req, res) => {
-  try {
-    const id = req.params.id;
+  const { id } = req.params;
 
-    const job = await Model.findByIdAndDelete(id);
-    if (!job) {
-      return res
-        .status(404)
-        .json({ message: "No document found with that id" });
-    }
+  const job = await Job.findById(id);
+  if (!job) throw new NotFoundError(`Job with id ${id} not found`);
 
-    res.status(204).json({
-      status: "success",
-      data: null,
-    });
-  } catch (err) {
-    res.status(404).json({
-      status: "fail",
-      message: err.message,
-    });
+  if (req.user?.role !== "admin" && job.createdBy.toString() !== req.user.id) {
+    throw new UnauthorizedError("You are not allowed to delete this job");
   }
+
+  await job.deleteOne();
+  res.status(StatusCodes.NO_CONTENT).send();
 };
