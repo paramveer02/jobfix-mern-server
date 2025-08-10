@@ -5,7 +5,6 @@ import cookieParser from "cookie-parser";
 
 import { jobRouter } from "./routes/jobRouter.js";
 import { authRouter } from "./routes/authRouter.js";
-import { protect } from "./controllers/authController.js";
 
 export const app = express();
 
