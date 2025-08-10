@@ -16,3 +16,12 @@ export const JOB_SORT_BY = {
   ASCENDING: "a-z",
   DESCENDING: "z-a",
 };
+
+// helper: allow only these fields to be updated
+export const ALLOWED_JOB_UPDATES = [
+  "company",
+  "position",
+  "jobStatus",
+  "jobType",
+  "jobLocation",
+];
