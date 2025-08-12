@@ -5,12 +5,11 @@ import {
   NotFoundError,
   UnauthorizedError,
 } from "../errors/customErrors.js";
-import { Job } from "../models/Job.js";
+import Job from "../models/Job.js";
 import { ALLOWED_JOB_UPDATES } from "../utils/constants.js";
 
 export const getAllJobs = async (req, res) => {
   // show only the current user's jobs (admins see all)
-  console.log(req.user);
   const filter = req.user?.role === "admin" ? {} : { createdBy: req.user.id };
   const jobs = await Job.find(filter).sort({ createdAt: -1 });
 
