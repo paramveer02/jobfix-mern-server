@@ -36,3 +36,14 @@ export const login = async (req, res) => {
 
   createSendToken(user, StatusCodes.OK, res);
 };
+
+// controllers/authController.js
+export const logout = (req, res) => {
+  res.cookie("jwt", "", {
+    httpOnly: true,
+    expires: new Date(0), // immediately expire
+    sameSite: "lax",
+    secure: false, // set true in production (HTTPS)
+  });
+  res.status(StatusCodes.OK).json({ message: "User logged out!" });
+};
