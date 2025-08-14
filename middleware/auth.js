@@ -26,7 +26,12 @@ export const protect = async (req, res, next) => {
         "Password changed recently. Please log in again"
       );
 
-    req.user = { id: user.id, role: user.role, location: user.location };
+    req.user = {
+      id: user.id,
+      role: user.role,
+      location: user.location,
+      email: user.email,
+    };
     next();
   } catch (err) {
     console.log(err);
