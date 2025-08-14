@@ -1,0 +1,142 @@
+[
+  {
+    "company": "TechNova",
+    "position": "Frontend Developer",
+    "jobStatus": "pending",
+    "jobType": "full-time",
+    "jobLocation": "Berlin"
+  },
+  {
+    "company": "HealthFirst",
+    "position": "Backend Developer",
+    "jobStatus": "interview",
+    "jobType": "full-time",
+    "jobLocation": "Munich"
+  },
+  {
+    "company": "GreenWorks",
+    "position": "UI/UX Designer",
+    "jobStatus": "declined",
+    "jobType": "part-time",
+    "jobLocation": "Hamburg"
+  },
+  {
+    "company": "SkyNet Solutions",
+    "position": "DevOps Engineer",
+    "jobStatus": "pending",
+    "jobType": "full-time",
+    "jobLocation": "Frankfurt"
+  },
+  {
+    "company": "NextGen AI",
+    "position": "AI Engineer",
+    "jobStatus": "interview",
+    "jobType": "internship",
+    "jobLocation": "Stuttgart"
+  },
+  {
+    "company": "EcoEnergy",
+    "position": "Data Analyst",
+    "jobStatus": "pending",
+    "jobType": "full-time",
+    "jobLocation": "Cologne"
+  },
+  {
+    "company": "CyberSafe",
+    "position": "Security Specialist",
+    "jobStatus": "declined",
+    "jobType": "full-time",
+    "jobLocation": "Bremen"
+  },
+  {
+    "company": "UrbanTech",
+    "position": "Mobile App Developer",
+    "jobStatus": "interview",
+    "jobType": "part-time",
+    "jobLocation": "Dresden"
+  },
+  {
+    "company": "CloudSphere",
+    "position": "Cloud Architect",
+    "jobStatus": "pending",
+    "jobType": "full-time",
+    "jobLocation": "Hannover"
+  },
+  {
+    "company": "MediCore",
+    "position": "Software Engineer",
+    "jobStatus": "pending",
+    "jobType": "internship",
+    "jobLocation": "Leipzig"
+  },
+  {
+    "company": "AeroTech",
+    "position": "QA Tester",
+    "jobStatus": "interview",
+    "jobType": "full-time",
+    "jobLocation": "Düsseldorf"
+  },
+  {
+    "company": "FinEdge",
+    "position": "Product Manager",
+    "jobStatus": "pending",
+    "jobType": "full-time",
+    "jobLocation": "Nuremberg"
+  },
+  {
+    "company": "ByteCrafters",
+    "position": "Game Developer",
+    "jobStatus": "declined",
+    "jobType": "full-time",
+    "jobLocation": "Bonn"
+  },
+  {
+    "company": "AutoDrive",
+    "position": "Machine Learning Engineer",
+    "jobStatus": "interview",
+    "jobType": "internship",
+    "jobLocation": "Karlsruhe"
+  },
+  {
+    "company": "FoodieTech",
+    "position": "Full Stack Developer",
+    "jobStatus": "pending",
+    "jobType": "full-time",
+    "jobLocation": "Mannheim"
+  },
+  {
+    "company": "InnoBuild",
+    "position": "Project Coordinator",
+    "jobStatus": "pending",
+    "jobType": "part-time",
+    "jobLocation": "Augsburg"
+  },
+  {
+    "company": "SmartWare",
+    "position": "Embedded Systems Engineer",
+    "jobStatus": "interview",
+    "jobType": "full-time",
+    "jobLocation": "Regensburg"
+  },
+  {
+    "company": "DataWave",
+    "position": "Business Analyst",
+    "jobStatus": "declined",
+    "jobType": "full-time",
+    "jobLocation": "Freiburg"
+  },
+  {
+    "company": "RoboLogic",
+    "position": "Robotics Engineer",
+    "jobStatus": "pending",
+    "jobType": "internship",
+    "jobLocation": "Potsdam"
+  },
+  {
+    "company": "CloudLink",
+    "position": "Systems Administrator",
+    "jobStatus": "interview",
+    "jobType": "full-time",
+    "jobLocation": "Kiel"
+  }
+]
