@@ -10,12 +10,56 @@ import { ALLOWED_JOB_UPDATES } from "../utils/constants.js";
 
 export const getAllJobs = async (req, res) => {
   // show only the current user's jobs (admins see all)
-  const filter = req.user?.role === "admin" ? {} : { createdBy: req.user.id };
-  const jobs = await Job.find(filter).sort({ createdAt: -1 });
+  const base = req.user?.role === "admin" ? {} : { createdBy: req.user.id };
+  const filter = { ...base };
+
+  const { search, jobStatus, jobType } = req.query;
+
+  // 1. Exact filters
+  if (jobStatus) filter.jobStatus = jobStatus;
+  if (jobType) filter.jobType = jobType;
+
+  // 2. Case-insensitive contains on company OR position
+  if (search) {
+    // contains match on company OR position (case-insensitive)
+    filter.$or = [
+      { company: { $regex: search, $options: "i" } },
+      { position: { $regex: search, $options: "i" } },
+    ];
+  }
+
+  // Build query
+  let query = Job.find(filter);
+
+  // 3. Sorting
+  const sort = req.query.sort || "-createdAt";
+
+  query = query.sort(sort.split(",").join(" "));
+
+  // 4. Field Selection
+  if (req.query.fields) {
+    const select = req.query.fields.split(",").join(" ");
+    query = query.select(select);
+  }
+
+  // 5. Pagination
+  const page = parseInt(req.query.page || "1");
+  const limit = parseInt(req.query.limit || "20");
+  const skip = (page - 1) * limit;
+
+  query = query.skip(skip).limit(limit);
+
+  if (req.query.page) {
+    const numJobs = await Job.countDocuments();
+    if (skip > numJobs) throw new Error("This page does not exist");
+  }
+
+  const jobs = await query;
 
   res.status(StatusCodes.OK).json({
     status: "success",
     results: jobs.length,
+    page,
     data: { jobs },
   });
 };
@@ -32,7 +76,7 @@ export const getJob = async (req, res) => {
   });
   if (!job) throw new NotFoundError(`Job with id ${id} not found`);
 
-  res.status(StatusCodes.OK).json({ status: "success", data: { job } });
+  res.status(StatusCodes.OK).json({ status: "success", job });
 };
 
 export const createJob = async (req, res) => {
@@ -69,7 +113,7 @@ export const updateJob = async (req, res) => {
     if (key in req.body) job[key] = req.body[key];
   }
 
-  await job.save(); // runs validators
+  await job.save();
   res.status(StatusCodes.OK).json({ status: "success", data: { job } });
 };
 
