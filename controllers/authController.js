@@ -9,15 +9,16 @@ import { createSendToken } from "../utils/createSendToken.js";
 export const signup = async (req, res) => {
   const { name, lastName, email, password, location, role } = req.body;
 
-  if (!email) throw new BadRequestError("Please provide your email");
+  const isFirstAccount = (await User.countDocuments()) === 0;
+  req.body.role = isFirstAccount ? "admin" : "user";
 
   const user = await User.create({
     name,
     lastName,
     email,
+    role: req.body.role,
     password,
     location,
-    role,
   });
 
   createSendToken(user, StatusCodes.CREATED, res);
