@@ -47,10 +47,7 @@ export const validateLoginInput = withValidationErrors([
 ]);
 
 export const validateUpdateUserInput = withValidationErrors([
-  body("name").trim().notEmpty().withMessage("Please provide name"),
-  body("lastName").trim().notEmpty().withMessage("Please provide last name"),
-  body("location").trim().notEmpty().withMessage("Please provide location"),
-  // if you allow email update:
+  body("name").notEmpty().withMessage("name is required"),
   body("email")
     .notEmpty()
     .withMessage("email is required")
@@ -58,10 +55,12 @@ export const validateUpdateUserInput = withValidationErrors([
     .withMessage("invalid email format")
     .custom(async (email, { req }) => {
       const user = await User.findOne({ email });
-      if (user && user._id.toString() !== req.user.userId) {
+      if (user && user._id.toString() !== req.user.id) {
         throw new Error("email already exists");
       }
     }),
+  body("lastName").notEmpty().withMessage("last name is required"),
+  body("location").notEmpty().withMessage("location is required"),
 ]);
 
 /* ========== JOB ========== */
@@ -83,7 +82,7 @@ export const validateIdParam = withValidationErrors([
     const job = await Job.findById(value);
     if (!job) throw new NotFoundError(`no job with id ${value}`);
     const isAdmin = req.user.role === "admin";
-    const isOwner = req.user.userId === job.createdBy.toString();
+    const isOwner = req.user.id === job.createdBy.toString();
     if (!isAdmin && !isOwner)
       throw UnauthorizedError("not authorized to access this route");
   }),
