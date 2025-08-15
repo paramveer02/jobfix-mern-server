@@ -4,139 +4,159 @@
     "position": "Frontend Developer",
     "jobStatus": "pending",
     "jobType": "full-time",
-    "jobLocation": "Berlin"
+    "jobLocation": "Berlin",
+    "createdAt": "2025-08-01T10:15:00.000Z"
   },
   {
     "company": "HealthFirst",
     "position": "Backend Developer",
     "jobStatus": "interview",
     "jobType": "full-time",
-    "jobLocation": "Munich"
+    "jobLocation": "Munich",
+    "createdAt": "2025-07-18T09:45:00.000Z"
   },
   {
     "company": "GreenWorks",
     "position": "UI/UX Designer",
     "jobStatus": "declined",
     "jobType": "part-time",
-    "jobLocation": "Hamburg"
+    "jobLocation": "Hamburg",
+    "createdAt": "2025-06-10T14:30:00.000Z"
   },
   {
     "company": "SkyNet Solutions",
     "position": "DevOps Engineer",
     "jobStatus": "pending",
     "jobType": "full-time",
-    "jobLocation": "Frankfurt"
+    "jobLocation": "Frankfurt",
+    "createdAt": "2025-06-22T11:20:00.000Z"
   },
   {
     "company": "NextGen AI",
     "position": "AI Engineer",
     "jobStatus": "interview",
     "jobType": "internship",
-    "jobLocation": "Stuttgart"
+    "jobLocation": "Stuttgart",
+    "createdAt": "2025-05-05T13:40:00.000Z"
   },
   {
     "company": "EcoEnergy",
     "position": "Data Analyst",
     "jobStatus": "pending",
     "jobType": "full-time",
-    "jobLocation": "Cologne"
+    "jobLocation": "Cologne",
+    "createdAt": "2025-05-19T08:55:00.000Z"
   },
   {
     "company": "CyberSafe",
     "position": "Security Specialist",
     "jobStatus": "declined",
     "jobType": "full-time",
-    "jobLocation": "Bremen"
+    "jobLocation": "Bremen",
+    "createdAt": "2025-04-28T15:25:00.000Z"
   },
   {
     "company": "UrbanTech",
     "position": "Mobile App Developer",
     "jobStatus": "interview",
     "jobType": "part-time",
-    "jobLocation": "Dresden"
+    "jobLocation": "Dresden",
+    "createdAt": "2025-04-15T10:00:00.000Z"
   },
   {
     "company": "CloudSphere",
     "position": "Cloud Architect",
     "jobStatus": "pending",
     "jobType": "full-time",
-    "jobLocation": "Hannover"
+    "jobLocation": "Hannover",
+    "createdAt": "2025-03-12T16:50:00.000Z"
   },
   {
     "company": "MediCore",
     "position": "Software Engineer",
     "jobStatus": "pending",
     "jobType": "internship",
-    "jobLocation": "Leipzig"
+    "jobLocation": "Leipzig",
+    "createdAt": "2025-03-28T09:15:00.000Z"
   },
   {
     "company": "AeroTech",
     "position": "QA Tester",
     "jobStatus": "interview",
     "jobType": "full-time",
-    "jobLocation": "Düsseldorf"
+    "jobLocation": "Düsseldorf",
+    "createdAt": "2025-02-07T14:05:00.000Z"
   },
   {
     "company": "FinEdge",
     "position": "Product Manager",
     "jobStatus": "pending",
     "jobType": "full-time",
-    "jobLocation": "Nuremberg"
+    "jobLocation": "Nuremberg",
+    "createdAt": "2025-02-21T11:35:00.000Z"
   },
   {
     "company": "ByteCrafters",
     "position": "Game Developer",
     "jobStatus": "declined",
     "jobType": "full-time",
-    "jobLocation": "Bonn"
+    "jobLocation": "Bonn",
+    "createdAt": "2025-01-30T08:10:00.000Z"
   },
   {
     "company": "AutoDrive",
     "position": "Machine Learning Engineer",
     "jobStatus": "interview",
     "jobType": "internship",
-    "jobLocation": "Karlsruhe"
+    "jobLocation": "Karlsruhe",
+    "createdAt": "2025-01-12T13:50:00.000Z"
   },
   {
     "company": "FoodieTech",
     "position": "Full Stack Developer",
     "jobStatus": "pending",
     "jobType": "full-time",
-    "jobLocation": "Mannheim"
+    "jobLocation": "Mannheim",
+    "createdAt": "2025-12-25T15:45:00.000Z"
   },
   {
     "company": "InnoBuild",
     "position": "Project Coordinator",
     "jobStatus": "pending",
     "jobType": "part-time",
-    "jobLocation": "Augsburg"
+    "jobLocation": "Augsburg",
+    "createdAt": "2025-12-05T10:20:00.000Z"
   },
   {
     "company": "SmartWare",
     "position": "Embedded Systems Engineer",
     "jobStatus": "interview",
     "jobType": "full-time",
-    "jobLocation": "Regensburg"
+    "jobLocation": "Regensburg",
+    "createdAt": "2025-08-14T09:00:00.000Z"
   },
   {
     "company": "DataWave",
     "position": "Business Analyst",
     "jobStatus": "declined",
     "jobType": "full-time",
-    "jobLocation": "Freiburg"
+    "jobLocation": "Freiburg",
+    "createdAt": "2025-06-28T14:40:00.000Z"
   },
   {
     "company": "RoboLogic",
     "position": "Robotics Engineer",
     "jobStatus": "pending",
     "jobType": "internship",
-    "jobLocation": "Potsdam"
+    "jobLocation": "Potsdam",
+    "createdAt": "2025-05-18T08:35:00.000Z"
   },
   {
     "company": "CloudLink",
     "position": "Systems Administrator",
     "jobStatus": "interview",
     "jobType": "full-time",
-    "jobLocation": "Kiel"
+    "jobLocation": "Kiel",
+    "createdAt": "2025-04-02T12:55:00.000Z"
   }
 ]
