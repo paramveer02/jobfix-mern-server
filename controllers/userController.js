@@ -16,14 +16,16 @@ export const updateCurrentUser = async (req, res) => {
   let oldAvatarPublicId;
 
   if (req.file) {
-    // Get the current user to fetch old avatar public id
-    const currentUser = await User.findById(req.user.id);
+    // fetch existing avatar public id (to delete later)
+    const currentUser = await User.findById(req.user.id).select(
+      "avatarPublicId"
+    );
     oldAvatarPublicId = currentUser?.avatarPublicId;
 
-    const response = await cloudinary.v2.uploader.upload(req.file.path);
-    await fs.unlink(req.file.path);
-    newUser.avatar = response.secure_url;
-    newUser.avatarPublicId = response.public_id;
+    // upload in-memory buffer to Cloudinary
+    const result = await uploadBuffer(req.file.buffer);
+    newUser.avatar = result.secure_url;
+    newUser.avatarPublicId = result.public_id;
   }
 
   const updatedUser = await User.findByIdAndUpdate(req.user.id, newUser, {
