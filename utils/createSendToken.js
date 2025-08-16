@@ -11,9 +11,10 @@ export const createSendToken = (user, statusCode, res) => {
 
   const oneDay = 24 * 60 * 60 * 1000;
 
-  res.cookie("jwt", token, {
+  res.cookie("token", token, {
     httpOnly: true,
     expires: new Date(Date.now() + oneDay),
+    path: "/",
     secure: process.env.NODE_ENV === "production",
   });
 

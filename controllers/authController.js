@@ -40,7 +40,7 @@ export const login = async (req, res) => {
 
 // controllers/authController.js
 export const logout = (req, res) => {
-  res.cookie("jwt", "", {
+  res.cookie("token", "", {
     httpOnly: true,
     expires: new Date(0), // immediately expire
     sameSite: "lax",
