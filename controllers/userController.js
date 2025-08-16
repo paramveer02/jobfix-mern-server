@@ -11,6 +11,16 @@ export const getCurrentUser = async (req, res) => {
   res.status(StatusCodes.OK).json({ user });
 };
 
+// helper: promisified upload_stream
+const uploadBuffer = (buffer) =>
+  new Promise((resolve, reject) => {
+    const stream = cloudinary.v2.uploader.upload_stream(
+      { folder: "jobfix/avatars" },
+      (err, result) => (err ? reject(err) : resolve(result))
+    );
+    stream.end(buffer);
+  });
+
 export const updateCurrentUser = async (req, res) => {
   const newUser = { ...req.body };
   let oldAvatarPublicId;
