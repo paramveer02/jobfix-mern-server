@@ -1,15 +1,16 @@
 import multer from "multer";
+import { BadRequestError } from "../errors/customErrors.js";
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "public/uploads");
-  },
-  filename: (req, file, cb) => {
-    const fileName = file.originalname;
-    cb(null, fileName);
-  },
-});
+const storage = multer.memoryStorage();
 
-const upload = multer({ storage });
+const fileFilter = (req, file, cb) => {
+  const ok = ["image/jpeg", "image/png", "image/webp", "image/gif"];
+  if (ok.includes(file.mimetype)) return cb(null, true);
+  cb(new BadRequestError("Only image files (jpg, png, webp, gif) are allowed"));
+};
 
-export default upload;
+export default multer({
+  storage,
+  limits: { fileSize: 0.5 * 1024 * 1024 }, // 0.5 MB
+  fileFilter,
+}).single("avatar"); // <-- field name expected from the client
