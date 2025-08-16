@@ -1,7 +1,5 @@
 import mongoose from "mongoose";
 import day from "dayjs";
-
-// controllers/jobController.js
 import { StatusCodes } from "http-status-codes";
 import {
   BadRequestError,
@@ -12,58 +10,56 @@ import Job from "../models/Job.js";
 import { ALLOWED_JOB_UPDATES } from "../utils/constants.js";
 
 export const getAllJobs = async (req, res) => {
-  // show only the current user's jobs (admins see all)
   const base = req.user?.role === "admin" ? {} : { createdBy: req.user.id };
   const filter = { ...base };
 
-  const { search, jobStatus, jobType } = req.query;
+  const { search, jobStatus, jobType, sort = "newest" } = req.query;
 
-  // 1. Exact filters
-  if (jobStatus) filter.jobStatus = jobStatus;
-  if (jobType) filter.jobType = jobType;
+  // exact filters (ignore "all")
+  if (jobStatus && jobStatus !== "all") filter.jobStatus = jobStatus;
+  if (jobType && jobType !== "all") filter.jobType = jobType;
 
-  // 2. Case-insensitive contains on company OR position
+  // text search on company/position (case-insensitive)
   if (search) {
-    // contains match on company OR position (case-insensitive)
     filter.$or = [
       { company: { $regex: search, $options: "i" } },
       { position: { $regex: search, $options: "i" } },
     ];
   }
 
-  // Build query
+  // base query
   let query = Job.find(filter);
 
-  // 3. Sorting
-  const sort = req.query.sort || "-createdAt";
+  // sort mapping (course style)
+  const sortMap = {
+    newest: "-createdAt",
+    oldest: "createdAt",
+    "a-z": "position",
+    "z-a": "-position",
+  };
+  query = query.sort(sortMap[sort] || sortMap.newest);
 
-  query = query.sort(sort.split(",").join(" "));
-
-  // 4. Field Selection
+  // field selection (optional)
   if (req.query.fields) {
     const select = req.query.fields.split(",").join(" ");
     query = query.select(select);
   }
 
-  // 5. Pagination
-  const page = parseInt(req.query.page || "1");
-  const limit = parseInt(req.query.limit || "20");
+  // pagination
+  const page = Number(req.query.page) || 1;
+  const limit = Number(req.query.limit) || 10;
   const skip = (page - 1) * limit;
 
-  query = query.skip(skip).limit(limit);
+  const totalJobs = await Job.countDocuments(filter);
+  const numOfPages = Math.ceil(totalJobs / limit);
 
-  if (req.query.page) {
-    const numJobs = await Job.countDocuments();
-    if (skip > numJobs) throw new Error("This page does not exist");
-  }
-
-  const jobs = await query;
+  const jobs = await query.skip(skip).limit(limit);
 
   res.status(StatusCodes.OK).json({
-    status: "success",
-    results: jobs.length,
+    jobs,
+    totalJobs,
+    numOfPages,
     page,
-    data: { jobs },
   });
 };
 
