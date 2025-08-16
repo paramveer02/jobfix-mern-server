@@ -4,7 +4,7 @@ import {
 } from "../errors/customErrors.js";
 import User from "../models/User.js";
 import { StatusCodes } from "http-status-codes";
-import { createSendToken } from "../utils/createSendToken.js";
+import createSendToken from "../utils/createSendToken.js";
 
 export const signup = async (req, res) => {
   const { name, lastName, email, password, location, role } = req.body;
