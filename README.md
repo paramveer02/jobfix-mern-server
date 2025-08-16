@@ -1,8 +1,6 @@
----
-
 ## ✅ README for **jobfix-server** (backend)
 
-```markdown
+````markdown
 # JobFix — Server (Node.js + Express + MongoDB)
 
 [![Node](https://img.shields.io/badge/Node-22-5fa04e?logo=node.js&logoColor=fff)](https://nodejs.org/)
@@ -15,8 +13,6 @@
 **Base URL:** https://jobfix-server.onrender.com  
 **Healthcheck:** `/health` → `ok`
 
----
-
 ## Features
 
 - 🔐 JWT auth with HttpOnly cookies
@@ -26,8 +22,6 @@
 - 🧱 Security middlewares: CORS (allow-list), Helmet, cookie parsing
 - 🪵 Dev logging via `morgan` (dev only)
 
----
-
 ## Tech Stack
 
 - **Node.js 22**, **Express**
@@ -35,8 +29,6 @@
 - **Cloudinary** (image storage)
 - **Multer (memoryStorage)** for safe upload buffers
 - **dotenv**, **helmet**, **cookie-parser**, **morgan**
-
----
 
 ## Environment Variables
 
@@ -61,3 +53,4 @@ CLOUD_NAME=<cloud_name>
 CLOUD_API_KEY=<api_key>
 CLOUD_API_SECRET=<api_secret>
 ```
+````
