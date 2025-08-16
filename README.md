@@ -49,8 +49,30 @@ DEMO_EMAIL=test@test.com
 CLOUD_NAME=<cloud_name>
 CLOUD_API_KEY=<api_key>
 CLOUD_API_SECRET=<api_secret>
-```
 
 ```
 
+## API Overview
+
+```
+Auth /api/v1/auth
+
+POST /signup – register user
+POST /login – login (sets HttpOnly cookie token)
+POST /logout – clear cookie
+
+Users /api/v1/users (protected)
+
+GET /current-user – return current user
+PATCH /update-user – update profile (supports avatar file)
+GET /admin/app-stats – admin-only platform stats
+
+Jobs /api/v1/jobs (protected)
+
+GET / – list jobs (search/filter/sort/paginate)
+POST / – create job
+GET /:id – get one job
+PATCH /:id – update job
+DELETE /:id – delete job
+GET /stats – charts data
 ```
