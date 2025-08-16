@@ -11,6 +11,6 @@ const fileFilter = (req, file, cb) => {
 
 export default multer({
   storage,
-  limits: { fileSize: 0.5 * 1024 * 1024 }, // 0.5 MB
+  limits: { fileSize: 0.5 * 1024 * 1024 },
   fileFilter,
-}).single("avatar"); // <-- field name expected from the client
+}).single("avatar");

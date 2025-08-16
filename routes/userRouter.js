@@ -17,7 +17,7 @@ userRouter.get("/current-user", getCurrentUser);
 userRouter.patch(
   "/update-user",
   blockDemoWrites,
-  upload.single("avatar"),
+  upload,
   validateUpdateUserInput,
   updateCurrentUser
 );
