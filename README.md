@@ -1,6 +1,3 @@
-## ✅ README for **jobfix-server** (backend)
-
-````markdown
 # JobFix — Server (Node.js + Express + MongoDB)
 
 [![Node](https://img.shields.io/badge/Node-22-5fa04e?logo=node.js&logoColor=fff)](https://nodejs.org/)
@@ -53,4 +50,7 @@ CLOUD_NAME=<cloud_name>
 CLOUD_API_KEY=<api_key>
 CLOUD_API_SECRET=<api_secret>
 ```
-````
+
+```
+
+```
