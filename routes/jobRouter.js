@@ -28,5 +28,5 @@ jobRouter.route("/stats").get(showStats);
 jobRouter
   .route("/:id")
   .get(validateIdParam, getJob)
-  .patch(blockDemoWrites, validateJobInput, updateJob)
+  .patch(blockDemoWrites, updateJob)
   .delete(blockDemoWrites, deleteJob);

@@ -18,7 +18,7 @@ userRouter.patch(
   "/update-user",
   blockDemoWrites,
   upload,
-  validateUpdateUserInput,
+  // validateUpdateUserInput,
   updateCurrentUser
 );
 
