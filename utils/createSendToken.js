@@ -8,6 +8,7 @@ const signToken = (userId) =>
 export default function createSendToken(user, statusCode, req, res) {
   const token = signToken(user._id);
 
+  const isHttps = req.secure || req.get("x-forwarded-proto") === "https";
   const origin = req.get("origin") || "";
   const host = req.get("host") || "";
   const isCrossSite = origin && !origin.includes(host);
