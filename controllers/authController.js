@@ -21,7 +21,7 @@ export const signup = async (req, res) => {
     location,
   });
 
-  createSendToken(user, StatusCodes.CREATED, res);
+  createSendToken(user, StatusCodes.CREATED, req, res);
 };
 
 export const login = async (req, res) => {
@@ -35,16 +35,21 @@ export const login = async (req, res) => {
   if (!user || !(await user.correctPassword(password, user.password)))
     throw new UnauthenticatedError("Please provide correct credentials");
 
-  createSendToken(user, StatusCodes.OK, res);
+  createSendToken(user, StatusCodes.OK, req, res);
 };
 
 // controllers/authController.js
 export const logout = (req, res) => {
-  res.cookie("token", "", {
+  const isHttps = req.secure || req.get("x-forwarded-proto") === "https";
+  const origin = req.get("origin") || "";
+  const host = req.get("host") || "";
+  const isCrossSite = origin && !origin.includes(host);
+
+  res.clearCookie("token", {
     httpOnly: true,
-    expires: new Date(0), // immediately expire
-    sameSite: "lax",
-    secure: false, // set true in production (HTTPS)
+    path: "/",
+    sameSite: isCrossSite ? "None" : "Lax",
+    secure: isCrossSite ? true : isHttps,
   });
   res.status(StatusCodes.OK).json({ message: "User logged out!" });
 };

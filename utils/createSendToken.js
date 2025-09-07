@@ -1,4 +1,3 @@
-// utils/createSendToken.js
 import jwt from "jsonwebtoken";
 
 const signToken = (userId) =>
@@ -6,16 +5,19 @@ const signToken = (userId) =>
     expiresIn: process.env.JWT_EXPIRES_IN,
   });
 
-export default function createSendToken(user, statusCode, res) {
+export default function createSendToken(user, statusCode, req, res) {
   const token = signToken(user._id);
-  const isProd = process.env.NODE_ENV === "production";
+
+  const origin = req.get("origin") || "";
+  const host = req.get("host") || "";
+  const isCrossSite = origin && !origin.includes(host);
 
   res.cookie("token", token, {
     httpOnly: true,
-    secure: isProd,
-    sameSite: "None",
+    sameSite: isCrossSite ? "None" : "Lax",
+    secure: isCrossSite ? true : isHttps,
     path: "/",
-    maxAge: 1000 * 60 * 60 * 24 * 5,
+    maxAge: 1000 * 60 * 60 * 24 * 5, // 5 Days
   });
 
   user.password = undefined;
