@@ -24,7 +24,6 @@ userRouter.patch(
 
 userRouter.get(
   "/admin/app-stats",
-  blockDemoWrites,
   restrict("admin"),
   getApplicationStats
 );

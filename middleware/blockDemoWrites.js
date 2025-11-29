@@ -8,7 +8,8 @@ const blockDemoWrites = (req, res, next) => {
     demoEmail &&
     userEmail.toLowerCase() === demoEmail.toLowerCase();
 
-  if (isDemo) {
+  // Only block mutating methods (POST, PUT, PATCH, DELETE)
+  if (isDemo && req.method !== "GET" && req.method !== "HEAD") {
     throw new UnauthorizedError("Demo User. Read Only");
   }
   next();

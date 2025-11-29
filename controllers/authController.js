@@ -40,16 +40,13 @@ export const login = async (req, res) => {
 
 // controllers/authController.js
 export const logout = (req, res) => {
-  const isHttps = req.secure || req.get("x-forwarded-proto") === "https";
-  const origin = req.get("origin") || "";
-  const host = req.get("host") || "";
-  const isCrossSite = origin && !origin.includes(host);
+  const isProduction = process.env.NODE_ENV === "production";
 
   res.clearCookie("token", {
     httpOnly: true,
     path: "/",
-    sameSite: isCrossSite ? "None" : "Lax",
-    secure: isCrossSite ? true : isHttps,
+    sameSite: isProduction ? "None" : "Lax",
+    secure: isProduction ? true : false,
   });
   res.status(StatusCodes.OK).json({ message: "User logged out!" });
 };

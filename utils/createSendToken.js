@@ -8,15 +8,13 @@ const signToken = (userId) =>
 export default function createSendToken(user, statusCode, req, res) {
   const token = signToken(user._id);
 
-  const isHttps = req.secure || req.get("x-forwarded-proto") === "https";
-  const origin = req.get("origin") || "";
-  const host = req.get("host") || "";
-  const isCrossSite = origin && !origin.includes(host);
-
+  // Always use cross-site compatible settings in production
+  const isProduction = process.env.NODE_ENV === "production";
+  
   res.cookie("token", token, {
     httpOnly: true,
-    sameSite: isCrossSite ? "None" : "Lax",
-    secure: isCrossSite ? true : isHttps,
+    sameSite: isProduction ? "None" : "Lax",
+    secure: isProduction ? true : false,
     path: "/",
     maxAge: 1000 * 60 * 60 * 24 * 5, // 5 Days
   });
