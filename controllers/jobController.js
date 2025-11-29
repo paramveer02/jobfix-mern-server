@@ -19,18 +19,15 @@ export const getAllJobs = async (req, res) => {
   if (jobStatus && jobStatus !== "all") filter.jobStatus = jobStatus;
   if (jobType && jobType !== "all") filter.jobType = jobType;
 
-  // text search on company/position (case-insensitive)
+  // text search using MongoDB text index (faster than regex)
   if (search) {
-    filter.$or = [
-      { company: { $regex: search, $options: "i" } },
-      { position: { $regex: search, $options: "i" } },
-    ];
+    filter.$text = { $search: search };
   }
 
   // base query
-  let query = Job.find(filter);
+  let query = Job.find(filter).lean();
 
-  // sort mapping (course style)
+  // sort mapping
   const sortMap = {
     newest: "-createdAt",
     oldest: "createdAt",
@@ -50,10 +47,13 @@ export const getAllJobs = async (req, res) => {
   const limit = Number(req.query.limit) || 10;
   const skip = (page - 1) * limit;
 
-  const totalJobs = await Job.countDocuments(filter);
-  const numOfPages = Math.ceil(totalJobs / limit);
+  // Parallel execution for count and jobs
+  const [totalJobs, jobs] = await Promise.all([
+    Job.countDocuments(filter),
+    query.skip(skip).limit(limit),
+  ]);
 
-  const jobs = await query.skip(skip).limit(limit);
+  const numOfPages = Math.ceil(totalJobs / limit);
 
   res.status(StatusCodes.OK).json({
     jobs,
@@ -69,10 +69,13 @@ export const getJob = async (req, res) => {
   const query = { _id: id };
   if (req.user?.role !== "admin") query.createdBy = req.user.id;
 
-  const job = await Job.findOne(query).populate({
-    path: "createdBy",
-    select: "name",
-  });
+  const job = await Job.findOne(query)
+    .populate({
+      path: "createdBy",
+      select: "name",
+    })
+    .lean();
+
   if (!job) throw new NotFoundError(`Job with id ${id} not found`);
 
   res.status(StatusCodes.OK).json({ status: "success", job });
@@ -133,36 +136,36 @@ export const deleteJob = async (req, res) => {
 export const showStats = async (req, res) => {
   const userId = new mongoose.Types.ObjectId(req.user.id);
 
-  let stats = await Job.aggregate([
-    { $match: { createdBy: userId } },
-    { $group: { _id: "$jobStatus", count: { $sum: 1 } } },
+  // Run both aggregations in parallel
+  const [stats, monthlyApplications] = await Promise.all([
+    Job.aggregate([
+      { $match: { createdBy: userId } },
+      { $group: { _id: "$jobStatus", count: { $sum: 1 } } },
+    ]),
+    Job.aggregate([
+      { $match: { createdBy: userId } },
+      {
+        $group: {
+          _id: { year: { $year: "$createdAt" }, month: { $month: "$createdAt" } },
+          count: { $sum: 1 },
+        },
+      },
+      { $sort: { "_id.year": -1, "_id.month": -1 } },
+      { $limit: 6 },
+    ]),
   ]);
 
-  stats = stats.reduce((acc, curr) => {
+  const defaultStats = stats.reduce((acc, curr) => {
     const { _id: title, count } = curr;
     acc[title] = count;
     return acc;
-  }, {});
+  }, {
+    pending: 0,
+    declined: 0,
+    interview: 0,
+  });
 
-  const defaultStats = {
-    pending: stats.pending || 0,
-    declined: stats.declined || 0,
-    interview: stats.interview || 0,
-  };
-
-  let monthlyApplications = await Job.aggregate([
-    { $match: { createdBy: new mongoose.Types.ObjectId(req.user.id) } },
-    {
-      $group: {
-        _id: { year: { $year: "$createdAt" }, month: { $month: "$createdAt" } },
-        count: { $sum: 1 },
-      },
-    },
-    { $sort: { "_id.year": -1, "_id.month": -1 } },
-    { $limit: 6 },
-  ]);
-
-  monthlyApplications = monthlyApplications
+  const formattedMonthlyApplications = monthlyApplications
     .map((item) => {
       const {
         _id: { year, month },
@@ -177,5 +180,5 @@ export const showStats = async (req, res) => {
     })
     .reverse();
 
-  return res.status(StatusCodes.OK).json({ defaultStats, monthlyApplications });
+  return res.status(StatusCodes.OK).json({ defaultStats, monthlyApplications: formattedMonthlyApplications });
 };

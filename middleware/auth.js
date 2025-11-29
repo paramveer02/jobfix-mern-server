@@ -16,7 +16,10 @@ export const protect = async (req, res, next) => {
   try {
     const decode = jwt.verify(token, process.env.JWT_SECRET);
 
-    const user = await User.findById(decode.userId);
+    // Select only required fields for performance
+    const user = await User.findById(decode.userId).select(
+      "role location email passwordChangedAt"
+    );
 
     if (!user)
       throw new NotFoundError("User belonging to this token does not exist");

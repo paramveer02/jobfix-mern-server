@@ -2,6 +2,7 @@ import express from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import helmet from "helmet";
+import compression from "compression";
 import path from "path";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
@@ -38,6 +39,9 @@ app.use(
 app.use(helmet());
 app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
 
+// Compression for response optimization
+app.use(compression());
+
 // Body & cookies
 app.use(express.json());
 app.use(cookieParser());
@@ -52,6 +56,11 @@ app.get("/health", (_, res) => res.status(200).send("ok"));
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/jobs", jobRouter);
+
+// SPA fallback - serve index.html for client-side routing on Render
+app.get("*", (req, res) => {
+  res.sendFile(path.resolve(__dirname, "./public", "index.html"));
+});
 
 // 404 & error handler
 app.use(notFound);

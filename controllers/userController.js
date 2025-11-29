@@ -6,7 +6,7 @@ import cloudinary from "cloudinary";
 import { promises as fs } from "fs";
 
 export const getCurrentUser = async (req, res) => {
-  const user = await User.findOne({ _id: req.user.id });
+  const user = await User.findOne({ _id: req.user.id }).lean();
   if (!user) throw new NotFoundError("User not found!");
   res.status(StatusCodes.OK).json({ user });
 };
@@ -27,9 +27,9 @@ export const updateCurrentUser = async (req, res) => {
 
   if (req.file) {
     // fetch existing avatar public id (to delete later)
-    const currentUser = await User.findById(req.user.id).select(
-      "avatarPublicId"
-    );
+    const currentUser = await User.findById(req.user.id)
+      .select("avatarPublicId")
+      .lean();
     oldAvatarPublicId = currentUser?.avatarPublicId;
 
     // upload in-memory buffer to Cloudinary
@@ -41,11 +41,13 @@ export const updateCurrentUser = async (req, res) => {
   const updatedUser = await User.findByIdAndUpdate(req.user.id, newUser, {
     new: true,
     runValidators: true,
-  });
+  }).lean();
 
-  // Only delete the old avatar if a new one was uploaded and there was an old avatar
+  // Delete old avatar in background (non-blocking)
   if (req.file && oldAvatarPublicId) {
-    await cloudinary.v2.uploader.destroy(oldAvatarPublicId);
+    cloudinary.v2.uploader.destroy(oldAvatarPublicId).catch((err) => {
+      console.error("Failed to delete old avatar:", err);
+    });
   }
 
   res.status(StatusCodes.OK).json({ user: updatedUser });

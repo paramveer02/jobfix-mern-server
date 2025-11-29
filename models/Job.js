@@ -34,6 +34,12 @@ const jobSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+// Performance indexes
+jobSchema.index({ createdBy: 1, createdAt: -1 });
+jobSchema.index({ jobStatus: 1 });
+jobSchema.index({ jobType: 1 });
+jobSchema.index({ company: "text", position: "text" });
+
 const Job = mongoose.model("Job", jobSchema);
 
 export default Job;
